@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register | Cloud Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 36px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px #0001;
+      width: 340px;
+    }
+    h1 { color: #1e293b; text-align: center; }
+    p { text-align: center; color: #64748b; }
+    label { display: block; margin-top: 16px; font-weight: bold; }
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+    }
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 22px;
+      background: #2563eb;
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    a { color: #2563eb; }
+    .message { color: #b91c1c; text-align: center; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Create an Account</h1>
+    <p>Join Cloud Task Manager</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+        <p class="message">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('register') }}">
+      <label for="username">Username</label>
+      <input id="username" name="username"
+             minlength="3" maxlength="80"
+             required autocomplete="username">
+
+      <label for="password">Password</label>
+      <input id="password" name="password"
+             type="password" minlength="8"
+             required autocomplete="new-password">
+
+      <button type="submit">Create Account</button>
+    </form>
+
+    <p>Already registered?
+      <a href="{{ url_for('login') }}">Log in</a>
+    </p>
+  </main>
+</body>
+</html>
