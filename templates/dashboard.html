@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Cloud Task Manager</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      color: #1e293b;
+    }
+    header {
+      background: #1e293b;
+      color: white;
+      padding: 20px;
+    }
+    .header-content {
+      max-width: 850px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+    main {
+      max-width: 850px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .card {
+      background: white;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px #0001;
+      margin-bottom: 24px;
+    }
+    .add-form {
+      display: flex;
+      gap: 10px;
+    }
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+    }
+    button {
+      padding: 11px 17px;
+      border: 0;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+    .logout { background: #475569; }
+    .delete { background: #dc2626; }
+    .complete { background: #059669; }
+    .task {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .task:last-child { border-bottom: 0; }
+    .task-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .done {
+      text-decoration: line-through;
+      color: #94a3b8;
+    }
+    .empty { color: #64748b; }
+    @media (max-width: 550px) {
+      .task { align-items: flex-start; flex-direction: column; }
+      .add-form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <strong>Cloud Task Manager</strong>
+      <form method="POST" action="{{ url_for('logout') }}">
+        <button class="logout" type="submit">Log Out</button>
+      </form>
+    </div>
+  </header>
+
+  <main>
+    <h1>Welcome, {{ current_user.username }}!</h1>
+    <p>Your personal task dashboard</p>
+
+    <section class="card">
+      <h2>Add a New Task</h2>
+      <form class="add-form" method="POST"
+            action="{{ url_for('add_task') }}">
+        <input type="text" name="title"
+               placeholder="What do you need to do?"
+               maxlength="200" required>
+        <button type="submit">Add Task</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>My Tasks ({{ tasks|length }})</h2>
+
+      {% if tasks %}
+        {% for task in tasks %}
+          <div class="task">
+            <span class="{{ 'done' if task.completed else '' }}">
+              {{ task.title }}
+            </span>
+
+            <div class="task-actions">
+              <form method="POST"
+                    action="{{ url_for('toggle_task', task_id=task.id) }}">
+                <button class="complete" type="submit">
+                  {{ 'Undo' if task.completed else 'Complete' }}
+                </button>
+              </form>
+
+              <form method="POST"
+                    action="{{ url_for('delete_task', task_id=task.id) }}">
+                <button class="delete" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="empty">
+          No tasks yet. Add your first task above!
+        </p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>
